@@ -35,17 +35,20 @@ submitBtn.addEventListener("click", function(){
             innerSquare++;
         }
         console.log(grid);
+        //prendiamo tutti gli elementi square
         const generatedSquares = document.getElementsByClassName("square");
         console.log(generatedSquares);
+        //inizializziamo l'array dei numeri bomba e lo carichiamo in maniera casuale 
         const bombArray = [];
         let randomNumber = "";
         let i = 0;
         while(i < 16 ){
               randomNumber = rndNumberGenerate(squaresInGrid);
-
+              //se il numero generato è già presente ne generiamo un altro
               if(bombArray.includes(randomNumber)){
                 randomNumber = rndNumberGenerate(squaresInGrid);
               }else{
+                //altrimenti lo carichiamo nell'array
                 bombArray.push(randomNumber);
                 i++;
               }
@@ -70,33 +73,33 @@ submitBtn.addEventListener("click", function(){
             }
             thisSquare.classList.add(`square-${gridFormat}`);
             thisSquare.append(innerSquare);
-            thisSquare.addEventListener("click", squareOnClick());
-            
+            thisSquare.addEventListener("click", squareOnClick);
+
         return thisSquare;
         }
         //funzione per la gestione del click sugli square
-        function squareOnClick(array){
+        function squareOnClick(){
             const noBombArray = [];
             const innerNumber = parseInt(this.textContent);
+            console.log(innerNumber);
             if(bombArray.includes(innerNumber)){
                 this.classList.add("bomb");
-                for(let i = 0; i < bombArray.legth; i++){
+                for(let i = 0; i < bombArray.length; i++){
                     let elementI = bombArray[i];
                     for(let j = 0; j < generatedSquares.length; j++){
-                        let elementJ = generatedSquares[j];
-                       if(elementI == elementJ){
-                        elementI.classList.add("bomb");
+                        let elementJ = parseInt(generatedSquares[j].innerHTML);
+                       if(elementI === elementJ){
+                        generatedSquares[j].classList.add("bomb");
                     } 
                     }
-                    
                 }
             } 
             else{
                 this.classList.add("bg_lightblue");
                 console.log(this.textContent);
-                noBombArray.push(this.textContent);
+                noBombArray.push(parseInt(this.textContent));
+                console.log(noBombArray);
             }
-            
         }
         //funzione per generazione un numero random
         function rndNumberGenerate(gridLegth){

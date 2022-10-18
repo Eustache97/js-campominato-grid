@@ -17,6 +17,9 @@
 .bg_white{
     background-color: white;
 }
+.bomb{
+    background-color: #ff0000;
+}
 /* /Utilities */
 .wrapper{
     width: 100%;

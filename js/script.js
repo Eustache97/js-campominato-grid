@@ -1,15 +1,20 @@
+//Prendiamo gli elementi DOM che ci servono
 const wrapper = document.querySelector(".wrapper");
 console.log(wrapper);
 const levelGrid = document.getElementById("level");
 console.log(levelGrid);
 const submitBtn = document.getElementById("submit");
 console.log(submitBtn);
-let flag = false;
+//al click di submit
 submitBtn.addEventListener("click", function(){
-    if(flag == false){
+    //Ripuliamo il contenuto di wrapper
+        wrapper.innerHTML = "";
+        //Creiamo dinamicamente la grilla e lo appendiamo nel wrapper
         const grid = document.createElement("div");
         grid.classList.add("grid");
+        grid.classList.add("bg_white");
         wrapper.append(grid);
+        //Inizializziamo una variabile vuota che conterra a seconda della difficoltà il numero di square del grid 
         let squaresInGrid = "";
         switch (levelGrid.value) {
             case "easy":
@@ -22,35 +27,81 @@ submitBtn.addEventListener("click", function(){
                 squaresInGrid = 49;
                 break;
         }
-        const generatedSquares = generateSquare(squaresInGrid);
-        
-        function generateSquare (gridLegth){
+        //andiamo ad appendere al grid il numero di square che ci servono
         let innerSquare = 1;
-        for(i = 0; i < gridLegth; i++){
+        for(let i = 0; i < squaresInGrid; i++){
+            const square = generateSquare(squaresInGrid);
+            grid.append(square);
+            innerSquare++;
+        }
+        console.log(grid);
+        const generatedSquares = document.getElementsByClassName("square");
+        console.log(generatedSquares);
+        const bombArray = [];
+        let randomNumber = "";
+        let i = 0;
+        while(i < 16 ){
+              randomNumber = rndNumberGenerate(squaresInGrid);
+
+              if(bombArray.includes(randomNumber)){
+                randomNumber = rndNumberGenerate(squaresInGrid);
+              }else{
+                bombArray.push(randomNumber);
+                i++;
+              }
+            }
+            console.log(bombArray);
+        //funzione per la creazione di uno square
+        function generateSquare (){
+        
+            let gridFormat = "";
             const thisSquare = document.createElement("div");
             thisSquare.classList.add("square");
             switch (levelGrid.value) {
                 case "easy":
-                    thisSquare.classList.add("square-10");
+                    gridFormat = 10;
                     break;
                 case "medium":
-                    thisSquare.classList.add("square-9");
+                    gridFormat = 9;
                     break;
                 case "hard":
-                    thisSquare.classList.add("square-7");
+                    gridFormat = 7;
                     break;
             }
-            thisSquare.classList.add("bg_white");
+            thisSquare.classList.add(`square-${gridFormat}`);
             thisSquare.append(innerSquare);
-            grid.append(thisSquare);
-            thisSquare.addEventListener("click", function(){
-                this.classList.remove("bg_white");
+            thisSquare.addEventListener("click", squareOnClick());
+            
+        return thisSquare;
+        }
+        //funzione per la gestione del click sugli square
+        function squareOnClick(array){
+            const noBombArray = [];
+            const innerNumber = parseInt(this.textContent);
+            if(bombArray.includes(innerNumber)){
+                this.classList.add("bomb");
+                for(let i = 0; i < bombArray.legth; i++){
+                    let elementI = bombArray[i];
+                    for(let j = 0; j < generatedSquares.length; j++){
+                        let elementJ = generatedSquares[j];
+                       if(elementI == elementJ){
+                        elementI.classList.add("bomb");
+                    } 
+                    }
+                    
+                }
+            } 
+            else{
                 this.classList.add("bg_lightblue");
                 console.log(this.textContent);
-            })
-            innerSquare++;
+                noBombArray.push(this.textContent);
+            }
+            
         }
+        //funzione per generazione un numero random
+        function rndNumberGenerate(gridLegth){
+            let rndNumber = Math.floor(Math.random() * gridLegth) + 1;
+            return rndNumber;
         }
-    }
-    flag = true;
+
 })

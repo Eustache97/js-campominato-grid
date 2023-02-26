@@ -54,6 +54,18 @@ submitBtn.addEventListener("click", function(){
               }
             }
             console.log(bombArray);
+            ///////////////////////////////////////////////////////////////////////
+            //ciclo per debug che mostra in tutti i quadrati rossi
+            // for(let i = 0; i < bombArray.length; i++){
+            //     let elementI = bombArray[i];
+            //     for(let j = 0; j < generatedSquares.length; j++){
+            //         let elementJ = parseInt(generatedSquares[j].innerHTML);
+            //         if(elementI === elementJ){
+            //             generatedSquares[j].classList.add("bomb");
+            //         } 
+            //     }
+            // }
+            //////////////////////////////////////////////////////////////////////
         //funzione per la creazione di uno square
         function generateSquare (){
         
@@ -78,28 +90,49 @@ submitBtn.addEventListener("click", function(){
         return thisSquare;
         }
         //funzione per la gestione del click sugli square
+        let noBombIndex = 0;
+        const noBombArray = [];
         function squareOnClick(){
-            const noBombArray = [];
+            let flag = false;
             const innerNumber = parseInt(this.textContent);
             console.log(innerNumber);
             if(bombArray.includes(innerNumber)){
+                flag = true;
                 this.classList.add("bomb");
                 for(let i = 0; i < bombArray.length; i++){
                     let elementI = bombArray[i];
                     for(let j = 0; j < generatedSquares.length; j++){
                         let elementJ = parseInt(generatedSquares[j].innerHTML);
-                       if(elementI === elementJ){
-                        generatedSquares[j].classList.add("bomb");
-                    } 
+                        if(elementI === elementJ){
+                            generatedSquares[j].classList.add("bomb");
+                        } 
+                        generatedSquares[j].removeEventListener('click', squareOnClick);
                     }
                 }
+                alert('Partita finita , hai perso');
             } 
             else{
-                this.classList.add("bg_lightblue");
-                console.log(this.textContent);
-                noBombArray.push(parseInt(this.textContent));
-                console.log(noBombArray);
-            }
+                const remainingSquares = squaresInGrid - 16;
+                console.log(remainingSquares);
+                    if(flag == false)
+                    {
+                    this.classList.add("bg_lightblue");
+                    console.log(this.textContent);
+                    noBombArray.push(parseInt(this.textContent));
+                    this.removeEventListener('click', squareOnClick)
+                    noBombIndex++;
+                    console.log(noBombArray);
+
+                    if(noBombArray.length === remainingSquares){
+                        console.log('hai vinto');
+                        alert('Congratulazioni hai vinto!!');
+                        for(let j = 0; j < generatedSquares.length; j++){
+                            generatedSquares[j].removeEventListener('click', squareOnClick);
+                        } 
+                    }
+                } 
+               
+            } 
         }
         //funzione per generazione un numero random
         function rndNumberGenerate(gridLegth){
